@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:weak_five_studentlist_main/db/model/data_model.dart';
+// import 'package:weak_five_studentlist_main/db/model/data_model.dart';
+// import 'package:bloc/bloc.dart';
 
-import '../db/functions/db_functions.dart';
+import '../bloc/student_bloc/student_bloc_bloc.dart';
+// import '../db/functions/db_functions.dart';
 
 class WidgetAddStudent extends StatefulWidget {
   const WidgetAddStudent({super.key});
@@ -177,13 +180,19 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
         userPhoto!.path.isEmpty) {
       return showSnackbarMessage();
     }
-    final studentAdd = StudentModel(
+    // final studentAdd = StudentModel(
+    //     name: name,
+    //     age: age,
+    //     phoneNumber: phone,
+    //     address: address,
+    //     photo: userPhoto!.path);
+    // addStudent(studentAdd);
+    BlocProvider.of<StudentBlocBloc>(context).add(StudentAddEvent(
         name: name,
         age: age,
         phoneNumber: phone,
         address: address,
-        photo: userPhoto!.path);
-    addStudent(studentAdd);
+        photo: userPhoto!.path));
     Navigator.of(context).pop();
   }
 

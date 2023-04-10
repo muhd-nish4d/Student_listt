@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:weak_five_studentlist_main/db/functions/db_functions.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weak_five_studentlist_main/bloc/student_bloc/student_bloc_bloc.dart';
+// import 'package:weak_five_studentlist_main/db/functions/db_functions.dart';
 import 'package:weak_five_studentlist_main/db/model/data_model.dart';
 
 class WidgetEiditStudent extends StatefulWidget {
@@ -170,7 +172,14 @@ class _WidgetEiditStudentState extends State<WidgetEiditStudent> {
     if (eName.isEmpty || eAge.isEmpty || ephone.isEmpty || eAddress.isEmpty) {
       showSnackbarMessage(context);
     } else {
-      editStudent(widget.index, studentmodel);
+      BlocProvider.of<StudentBlocBloc>(context).add(StudentEditEvent(
+          name: eName,
+          age: eAge,
+          phoneNumber: ephone,
+          address: eAddress,
+          photo: widget.image,
+          id: widget.index));
+      // editStudent(widget.index, studentmodel);
       Navigator.of(context).pop();
     }
   }

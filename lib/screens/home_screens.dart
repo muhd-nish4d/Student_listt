@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:weak_five_studentlist_main/widgets/search_student.dart';
+// import 'package:weak_five_studentlist_main/widgets/search_student.dart';
 
-import '../db/functions/db_functions.dart';
+// import '../db/functions/db_functions.dart';
 import '../widgets/add_students.dart';
 import '../widgets/student_list.dart';
 
@@ -11,14 +11,14 @@ class ScreenHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
-    getAllStudents();
+    // getAllStudents();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
-        actions: [
-          IconButton(onPressed: (){
-            showSearch(context: context, delegate: WidgetSearch());
-          }, icon:const Icon(Icons.search))
+        actions:const [
+          // IconButton(onPressed: (){
+          //   showSearch(context: context, delegate: WidgetSearch());
+          // }, icon:const Icon(Icons.search))
         ],
       ),
       body: const WidgetStudentList(),
