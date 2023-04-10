@@ -1,15 +1,9 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:weak_five_studentlist_main/bloc/image_bloc/image_bloc.dart';
-// import 'package:weak_five_studentlist_main/db/model/data_model.dart';
-// import 'package:bloc/bloc.dart';
-
 import '../bloc/student_bloc/student_bloc_bloc.dart';
-// import '../db/functions/db_functions.dart';
 
 class WidgetAddStudent extends StatefulWidget {
   const WidgetAddStudent({super.key});
@@ -26,8 +20,8 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
   final phoneController = TextEditingController();
 
   final addressController = TextEditingController();
-   
-   dynamic image;
+
+  dynamic image;
 
   bool imageAlert = false;
 
@@ -58,17 +52,20 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
                 BlocBuilder<ImageBloc, ImageState>(
                   builder: (context, state) {
                     if (state is ImageLoadingState) {
-                      return const CircleAvatar(radius: 70,child: CircularProgressIndicator(),);
-                    }else if(state is ImageLoadedState){
+                      return const CircleAvatar(
+                        radius: 70,
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is ImageLoadedState) {
                       image = state.imageFile;
                       return CircleAvatar(
                         radius: 70,
                         backgroundImage: FileImage(File(state.imageFile.path)),
                       );
                       // Image.file(state.imageFile);
-                    }else if(state is ImageErrorState){
+                    } else if (state is ImageErrorState) {
                       return Text(state.errorMessage);
-                    }else{
+                    } else {
                       return const CircleAvatar(
                         radius: 70,
                         backgroundImage: AssetImage('assets/images/user.webp'),
@@ -176,6 +173,7 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
                   onPressed: () {
                     if (image != null) {
                       onAddStudentButtonClicked(context);
+                      BlocProvider.of<ImageBloc>(context).add(RemoveImageEvent());
                     } else {
                       imageSnackBar();
                     }

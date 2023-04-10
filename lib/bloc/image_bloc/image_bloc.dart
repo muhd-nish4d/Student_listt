@@ -18,5 +18,8 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
         emit(const ImageErrorState('No image selected'));
       }
     });
+    on<RemoveImageEvent>((event, emit) async{
+      emit(ImageInitial());
+    });
   }
 }

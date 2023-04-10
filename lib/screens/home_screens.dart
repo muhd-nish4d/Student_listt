@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:weak_five_studentlist_main/widgets/student_cards.dart';
 // import 'package:weak_five_studentlist_main/widgets/search_student.dart';
 
 // import '../db/functions/db_functions.dart';
 import '../widgets/add_students.dart';
+import '../widgets/search_student.dart';
 import '../widgets/student_list.dart';
 
 class ScreenHome extends StatelessWidget {
@@ -15,10 +17,13 @@ class ScreenHome extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
-        actions:const [
+        actions: [
+          IconButton(onPressed: (){
+            showSearch(context: context, delegate: WidgetSearch());
+          }, icon:const Icon(Icons.search)),
           // IconButton(onPressed: (){
-          //   showSearch(context: context, delegate: WidgetSearch());
-          // }, icon:const Icon(Icons.search))
+          //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => WidgetStudentCart(),));
+          // }, icon: Icon(Icons.abc))
         ],
       ),
       body: const WidgetStudentList(),

@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weak_five_studentlist_main/bloc/student_bloc/student_bloc_bloc.dart';
-// import 'package:weak_five_studentlist_main/db/functions/db_functions.dart';
-import 'package:weak_five_studentlist_main/db/model/data_model.dart';
+
+import '../bloc/image_bloc/image_bloc.dart';
 
 class WidgetEiditStudent extends StatefulWidget {
   final String image;
@@ -33,6 +33,8 @@ class _WidgetEiditStudentState extends State<WidgetEiditStudent> {
   TextEditingController studentAge = TextEditingController();
   TextEditingController studentAddress = TextEditingController();
   TextEditingController studentPhone = TextEditingController();
+  
+  dynamic image;
 
   @override
   void initState() {
@@ -58,9 +60,36 @@ class _WidgetEiditStudentState extends State<WidgetEiditStudent> {
             ),
             Column(
               children: [
-                CircleAvatar(
-                  radius: 70,
-                  backgroundImage: FileImage(File(widget.image)),
+                BlocBuilder<ImageBloc, ImageState>(
+                  builder: (context, state) {
+                    if (state is ImageLoadingState) {
+                      return const CircleAvatar(radius: 70,child: CircularProgressIndicator(),);
+                    }else if(state is ImageLoadedState){
+                      image = state.imageFile.path;
+                      return CircleAvatar(
+                        radius: 70,
+                        backgroundImage: FileImage(File(state.imageFile.path)),
+                      );
+                    }else if(state is ImageErrorState){
+                      return Text(state.errorMessage);
+                    }else{
+                      return  CircleAvatar(
+                        radius: 70,
+                        backgroundImage: FileImage(File(widget.image)),
+                      );
+                    }
+                  },
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    // getPhoto();
+                    BlocProvider.of<ImageBloc>(context).add(GetImageEvent());
+                  },
+                  icon: const Icon(Icons.photo),
+                  label: const Text('Edit Image'),
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
                 ),
                 const SizedBox(
                   height: 20,
@@ -143,6 +172,7 @@ class _WidgetEiditStudentState extends State<WidgetEiditStudent> {
                 ElevatedButton.icon(
                   onPressed: () {
                     onEditButtonClicked();
+                    BlocProvider.of<ImageBloc>(context).add(RemoveImageEvent());
                   },
                   icon: const Icon(Icons.thumb_up),
                   label: const Text('OK'),
@@ -159,12 +189,12 @@ class _WidgetEiditStudentState extends State<WidgetEiditStudent> {
   }
 
   Future<void> onEditButtonClicked() async {
-    final studentmodel = StudentModel(
-        photo: widget.image,
-        name: studentName.text.trim(),
-        age: studentAge.text.trim(),
-        phoneNumber: studentPhone.text.trim(),
-        address: studentAddress.text.trim());
+    // final studentmodel = StudentModel(
+    //     photo: image,
+    //     name: studentName.text.trim(),
+    //     age: studentAge.text.trim(),
+    //     phoneNumber: studentPhone.text.trim(),
+    //     address: studentAddress.text.trim());
     final eName = studentName.text;
     final eAge = studentAge.text;
     final ephone = studentPhone.text;
@@ -177,7 +207,7 @@ class _WidgetEiditStudentState extends State<WidgetEiditStudent> {
           age: eAge,
           phoneNumber: ephone,
           address: eAddress,
-          photo: widget.image,
+          photo: image,
           id: widget.index));
       // editStudent(widget.index, studentmodel);
       Navigator.of(context).pop();

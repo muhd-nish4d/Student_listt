@@ -8,3 +8,5 @@ abstract class ImageEvent extends Equatable {
 }
 
 class GetImageEvent extends ImageEvent {}
+
+class RemoveImageEvent extends ImageEvent {}
