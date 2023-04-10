@@ -5,6 +5,7 @@ import 'package:weak_five_studentlist_main/bloc/student_bloc/student_bloc_bloc.d
 import 'package:weak_five_studentlist_main/db/functions/db_functions.dart';
 import 'package:weak_five_studentlist_main/screens/home_screens.dart';
 
+import 'bloc/image_bloc/image_bloc.dart';
 import 'db/model/data_model.dart';
 
 Future<void> main() async {
@@ -24,10 +25,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<StudentBlocBloc>(context).add(StudentInitialEvent());
-    return MaterialApp(
-      title: 'Students List',
-      theme: ThemeData(primarySwatch: Colors.brown),
-      home: const ScreenHome(),
-    );
+    // BlocProvider.of<ImageBloc>(context).add(GetImageEvent());
+    return MultiBlocProvider(
+        providers: [
+          // BlocProvider<StudentBlocBloc>(
+          //   create: (context) => StudentBlocBloc(StudentDatabase()),
+          // ),
+          BlocProvider<ImageBloc>(
+            create: (context) => ImageBloc(),
+          )
+        ],
+        child: MaterialApp(
+          title: 'Students List',
+          theme: ThemeData(primarySwatch: Colors.brown),
+          home: const ScreenHome(),
+        ));
   }
 }

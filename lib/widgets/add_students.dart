@@ -1,8 +1,10 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:weak_five_studentlist_main/bloc/image_bloc/image_bloc.dart';
 // import 'package:weak_five_studentlist_main/db/model/data_model.dart';
 // import 'package:bloc/bloc.dart';
 
@@ -24,6 +26,8 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
   final phoneController = TextEditingController();
 
   final addressController = TextEditingController();
+   
+   dynamic image;
 
   bool imageAlert = false;
 
@@ -42,21 +46,43 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
             ),
             Column(
               children: [
-                userPhoto?.path == null
-                    ? const CircleAvatar(
+                // userPhoto?.path == null
+                //     ? const CircleAvatar(
+                //         radius: 70,
+                //         backgroundImage: AssetImage('assets/images/user.webp'),
+                //       )
+                //     : CircleAvatar(
+                //         radius: 70,
+                //         backgroundImage: FileImage(File(userPhoto!.path)),
+                //       ),
+                BlocBuilder<ImageBloc, ImageState>(
+                  builder: (context, state) {
+                    if (state is ImageLoadingState) {
+                      return const CircleAvatar(radius: 70,child: CircularProgressIndicator(),);
+                    }else if(state is ImageLoadedState){
+                      image = state.imageFile;
+                      return CircleAvatar(
+                        radius: 70,
+                        backgroundImage: FileImage(File(state.imageFile.path)),
+                      );
+                      // Image.file(state.imageFile);
+                    }else if(state is ImageErrorState){
+                      return Text(state.errorMessage);
+                    }else{
+                      return const CircleAvatar(
                         radius: 70,
                         backgroundImage: AssetImage('assets/images/user.webp'),
-                      )
-                    : CircleAvatar(
-                        radius: 70,
-                        backgroundImage: FileImage(File(userPhoto!.path)),
-                      ),
+                      );
+                    }
+                  },
+                ),
                 const SizedBox(
                   height: 20,
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
-                    getPhoto();
+                    // getPhoto();
+                    BlocProvider.of<ImageBloc>(context).add(GetImageEvent());
                   },
                   icon: const Icon(Icons.photo),
                   label: const Text('Add Image'),
@@ -148,7 +174,7 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
-                    if (userPhoto != null) {
+                    if (image != null) {
                       onAddStudentButtonClicked(context);
                     } else {
                       imageSnackBar();
@@ -177,7 +203,7 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
         age.isEmpty ||
         phone.isEmpty ||
         address.isEmpty ||
-        userPhoto!.path.isEmpty) {
+        image!.path.isEmpty) {
       return showSnackbarMessage();
     }
     // final studentAdd = StudentModel(
@@ -192,7 +218,7 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
         age: age,
         phoneNumber: phone,
         address: address,
-        photo: userPhoto!.path));
+        photo: image!.path));
     Navigator.of(context).pop();
   }
 
@@ -203,19 +229,19 @@ class _WidgetAddStudentState extends State<WidgetAddStudent> {
         content: Text('Items are Requierd')));
   }
 
-  File? userPhoto;
+  // File? userPhoto;
 
-  Future<void> getPhoto() async {
-    final photo = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (photo == null) {
-      return;
-    } else {
-      final photoTemp = File(photo.path);
-      setState(() {
-        userPhoto = photoTemp;
-      });
-    }
-  }
+  // Future<void> getPhoto() async {
+  //   final photo = await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   if (photo == null) {
+  //     return;
+  //   } else {
+  //     final photoTemp = File(photo.path);
+  //     setState(() {
+  //       userPhoto = photoTemp;
+  //     });
+  //   }
+  // }
 
   Future<void> imageSnackBar() async {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -42,3 +42,10 @@ class StudentDeleteEvent extends StudentBlocEvent {
 
   StudentDeleteEvent({required this.id});  
 }
+
+// //image edit
+// class StudentDp extends StudentBlocEvent{
+//   final String image;
+
+//   StudentDp({required this.image});
+// }

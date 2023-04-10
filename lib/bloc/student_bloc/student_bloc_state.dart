@@ -32,6 +32,4 @@ class StudentStateYourStudent extends StudentBlocState{
 }
 
 // New 
-class NewStudentState extends StudentBlocEvent {
-  
-}
+class NewStudentState extends StudentBlocEvent {}
